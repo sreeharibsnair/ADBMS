@@ -1,0 +1,374 @@
+mysql> CREATE DATABASE COMPANY_DB;
+Query OK, 1 row affected (0.00 sec)
+
+mysql> CREATE DATABASE INVOICE;
+Query OK, 1 row affected (0.00 sec)
+
+mysql> USE COMPANY_DB;
+Database changed
+mysql> 
+mysql> CREATE TABLE PERSON(
+    ->     SSN BIGINT,
+    ->     name VARCHAR(20),
+    ->     city VARCHAR(20),
+    ->     dob YEAR,
+    ->     adhar_no BIGINT,
+    ->     CONSTRAINT unique_details UNIQUE (SSN, adhar_no)
+    -> );
+Query OK, 0 rows affected (0.04 sec)
+
+mysql> 
+mysql> CREATE TABLE STUDENT(
+    ->     roll_no INT PRIMARY KEY,
+    ->     name VARCHAR(20) NOT NULL,
+    ->     age INT,
+    ->     address VARCHAR(30),
+    ->     gender CHAR(1) DEFAULT 'm'
+    -> );
+Query OK, 0 rows affected (0.03 sec)
+
+mysql> USE INVOICE;
+Database changed
+mysql> 
+mysql> CREATE TABLE Customer(
+    ->     id INT PRIMARY KEY,
+    ->     name VARCHAR(20),
+    ->     address VARCHAR(30),
+    ->     city VARCHAR(20),
+    ->     ph_no BIGINT
+    -> );
+Query OK, 0 rows affected (0.03 sec)
+
+mysql> 
+mysql> CREATE TABLE Product(
+    ->     pid INT PRIMARY KEY,
+    ->     pname VARCHAR(20),
+    ->     price DECIMAL(10,2)
+    -> );
+Query OK, 0 rows affected (0.03 sec)
+
+mysql> 
+mysql> CREATE TABLE Invoice_master(
+    ->     inv_id INT PRIMARY KEY,
+    ->     cust_id INT,
+    ->     inv_date DATE,
+    ->     FOREIGN KEY (cust_id) REFERENCES Customer(id)
+    -> );
+Query OK, 0 rows affected (0.03 sec)
+
+mysql> 
+mysql> CREATE TABLE Invoice_item(
+    ->     inv_id INT,
+    ->     pid INT,
+    ->     quantity INT,
+    ->     FOREIGN KEY (inv_id) REFERENCES Invoice_master(inv_id),
+    ->     FOREIGN KEY (pid) REFERENCES Product(pid)
+    -> );
+Query OK, 0 rows affected (0.05 sec)
+
+mysql> USE COMPANY_DB;
+Reading table information for completion of table and column names
+You can turn off this feature to get a quicker startup with -A
+
+Database changed
+mysql> 
+
+1. Insert values in EMPLOYEE table.
+mysql> INSERT INTO PERSON VALUES
+    -> (111111111111,'Sreehari','Calicut',2003,123456789012),
+    -> (222222222222,'Abhin','Wayanad',2002,234567890123);
+Query OK, 2 rows affected (0.00 sec)
+Records: 2  Duplicates: 0  Warnings: 0
+
+mysql> 
+
+2. Insert values in STUDENT table.
+mysql> INSERT INTO STUDENT VALUES
+    -> (101,'Jobin',21,'Kozhikode','m'),
+    -> (102,'Nihad',22,'Kozhikode','m'),
+    -> (103,'Sidhu',20,'Wayanad','m');
+Query OK, 3 rows affected (0.01 sec)
+Records: 3  Duplicates: 0  Warnings: 0
+
+mysql> 
+mysql> SELECT * FROM PERSON;
++--------------+----------+---------+------+--------------+
+| SSN          | name     | city    | dob  | adhar_no     |
++--------------+----------+---------+------+--------------+
+| 111111111111 | Sreehari | Calicut | 2003 | 123456789012 |
+| 222222222222 | Abhin    | Wayanad | 2002 | 234567890123 |
++--------------+----------+---------+------+--------------+
+2 rows in set (0.00 sec)
+
+mysql> SELECT * FROM STUDENT;
++---------+-------+------+-----------+--------+
+| roll_no | name  | age  | address   | gender |
++---------+-------+------+-----------+--------+
+|     101 | Jobin |   21 | Kozhikode | m      |
+|     102 | Nihad |   22 | Kozhikode | m      |
+|     103 | Sidhu |   20 | Wayanad   | m      |
++---------+-------+------+-----------+--------+
+3 rows in set (0.00 sec)
+
+mysql> USE INVOICE;
+Reading table information for completion of table and column names
+You can turn off this feature to get a quicker startup with -A
+
+Database changed
+mysql> 
+
+3. Insert values in INVOICE  
+mysql> INSERT INTO Customer VALUES
+    -> (10001,'Sreehari','Earimala','Calicut',9876543210),
+    -> (10002,'Ihsan','Main Road','Manassery',9876501234),
+    -> (10003,'XYZ','Town Road','Calicut',9998887776);
+Query OK, 3 rows affected (0.01 sec)
+Records: 3  Duplicates: 0  Warnings: 0
+
+mysql> 
+
+mysql> INSERT INTO Product VALUES
+    -> (1,'Pen',10),
+    -> (2,'Book',50),
+    -> (3,'Bag',500);
+Query OK, 3 rows affected (0.00 sec)
+Records: 3  Duplicates: 0  Warnings: 0
+
+mysql> 
+mysql> INSERT INTO Invoice_master VALUES
+    -> (101,10001,'2026-01-20'),
+    -> (102,10002,'2026-01-21'),
+    -> (103,10003,'2026-01-22');
+Query OK, 3 rows affected (0.01 sec)
+Records: 3  Duplicates: 0  Warnings: 0
+
+mysql> 
+mysql> INSERT INTO Invoice_item VALUES
+    -> (101,1,5),
+    -> (101,2,1),
+    -> (102,3,2),
+    -> (103,1,3);
+Query OK, 4 rows affected (0.00 sec)
+Records: 4  Duplicates: 0  Warnings: 0
+
+mysql> 
+mysql> SELECT * FROM Customer;
++-------+----------+-----------+-----------+------------+
+| id    | name     | address   | city      | ph_no      |
++-------+----------+-----------+-----------+------------+
+| 10001 | Sreehari | Earimala  | Calicut   | 9876543210 |
+| 10002 | Ihsan    | Main Road | Manassery | 9876501234 |
+| 10003 | XYZ      | Town Road | Calicut   | 9998887776 |
++-------+----------+-----------+-----------+------------+
+3 rows in set (0.00 sec)
+
+mysql> SELECT * FROM Product;
++-----+-------+--------+
+| pid | pname | price  |
++-----+-------+--------+
+|   1 | Pen   |  10.00 |
+|   2 | Book  |  50.00 |
+|   3 | Bag   | 500.00 |
++-----+-------+--------+
+3 rows in set (0.00 sec)
+
+mysql> SELECT * FROM Invoice_master;
++--------+---------+------------+
+| inv_id | cust_id | inv_date   |
++--------+---------+------------+
+|    101 |   10001 | 2026-01-20 |
+|    102 |   10002 | 2026-01-21 |
+|    103 |   10003 | 2026-01-22 |
++--------+---------+------------+
+3 rows in set (0.00 sec)
+
+mysql> SELECT * FROM Invoice_item;
++--------+------+----------+
+| inv_id | pid  | quantity |
++--------+------+----------+
+|    101 |    1 |        5 |
+|    101 |    2 |        1 |
+|    102 |    3 |        2 |
+|    103 |    1 |        3 |
++--------+------+----------+
+4 rows in set (0.00 sec)
+
+ 1. Update the price of a particular product. 
+mysql> UPDATE Product SET price=15 WHERE pid=1;
+Query OK, 1 row affected (0.00 sec)
+Rows matched: 1  Changed: 1  Warnings: 0
+
+
+ 2. Change the name of city ‘calicut’ to ‘kozhikode’ in the customer table. 
+mysql> UPDATE Customer SET city='Kozhikode' WHERE city='Calicut';
+Query OK, 2 rows affected (0.01 sec)
+Rows matched: 2  Changed: 2  Warnings: 0
+
+ 3. Update all prices with 2% of its original price. 
+mysql> UPDATE Product SET price = price + (price*0.02);
+Query OK, 3 rows affected (0.00 sec)
+Rows matched: 3  Changed: 3  Warnings: 0
+
+mysql> 
+
+ 4. Change the address, city, phone number of a particular customer. 
+mysql> UPDATE Customer
+    -> SET address='New Street', city='Kochi', ph_no=9999999999
+    -> WHERE id=10002;
+Query OK, 1 row affected (0.01 sec)
+Rows matched: 1  Changed: 1  Warnings: 0
+
+mysql> 
+
+ 5. Change the quantity of a purchased product of inv_id ‘101’ 
+mysql> UPDATE Invoice_item
+    -> SET quantity=10
+    -> WHERE inv_id=101 AND pid=1;
+Query OK, 1 row affected (0.00 sec)
+Rows matched: 1  Changed: 1  Warnings: 0
+
+mysql> 
+mysql> SELECT * FROM Product;
++-----+-------+--------+
+| pid | pname | price  |
++-----+-------+--------+
+|   1 | Pen   |  15.30 |
+|   2 | Book  |  51.00 |
+|   3 | Bag   | 510.00 |
++-----+-------+--------+
+3 rows in set (0.00 sec)
+
+mysql> SELECT * FROM Customer;
++-------+----------+------------+-----------+------------+
+| id    | name     | address    | city      | ph_no      |
++-------+----------+------------+-----------+------------+
+| 10001 | Sreehari | Earimala   | Kozhikode | 9876543210 |
+| 10002 | Ihsan    | New Street | Kochi     | 9999999999 |
+| 10003 | XYZ      | Town Road  | Kozhikode | 9998887776 |
++-------+----------+------------+-----------+------------+
+3 rows in set (0.00 sec)
+
+mysql> SELECT * FROM Invoice_item;
++--------+------+----------+
+| inv_id | pid  | quantity |
++--------+------+----------+
+|    101 |    1 |       10 |
+|    101 |    2 |        1 |
+|    102 |    3 |        2 |
+|    103 |    1 |        3 |
++--------+------+----------+
+4 rows in set (0.00 sec)
+
+
+1. Delete the record of customer id ‘10001’. 
+mysql> DELETE FROM Invoice_item WHERE inv_id=101;
+Query OK, 2 rows affected (0.00 sec)
+
+mysql> DELETE FROM Invoice_master WHERE inv_id=101;
+Query OK, 1 row affected (0.01 sec)
+
+mysql> DELETE FROM Customer WHERE id=10001;
+Query OK, 1 row affected (0.01 sec)
+
+mysql> 
+
+ 2. Delete all purchase details of items its quantity less than 2. 
+mysql> DELETE FROM Invoice_item WHERE quantity < 2;
+Query OK, 0 rows affected (0.00 sec)
+
+mysql> 
+ 3. Delete the purchase details of product ‘pen’ in the in_id ‘101’. 
+mysql> DELETE FROM Invoice_item WHERE inv_id=101 AND pid=1;
+Query OK, 0 rows affected (0.00 sec)
+
+mysql> 
+
+ 4. Delete details of customer who does not have phone number. 
+mysql> DELETE FROM Customer WHERE ph_no IS NULL;
+Query OK, 0 rows affected (0.00 sec)
+
+mysql> 
+mysql> SELECT * FROM Customer;
++-------+-------+------------+-----------+------------+
+| id    | name  | address    | city      | ph_no      |
++-------+-------+------------+-----------+------------+
+| 10002 | Ihsan | New Street | Kochi     | 9999999999 |
+| 10003 | XYZ   | Town Road  | Kozhikode | 9998887776 |
++-------+-------+------------+-----------+------------+
+2 rows in set (0.00 sec)
+
+mysql> SELECT * FROM Invoice_master;
++--------+---------+------------+
+| inv_id | cust_id | inv_date   |
++--------+---------+------------+
+|    102 |   10002 | 2026-01-21 |
+|    103 |   10003 | 2026-01-22 |
++--------+---------+------------+
+2 rows in set (0.00 sec)
+
+mysql> SELECT * FROM Invoice_item;
++--------+------+----------+
+| inv_id | pid  | quantity |
++--------+------+----------+
+|    102 |    3 |        2 |
+|    103 |    1 |        3 |
++--------+------+----------+
+2 rows in set (0.00 sec)
+
+
+mysql> USE COMPANY_DB;
+Reading table information for completion of table and column names
+You can turn off this feature to get a quicker startup with -A
+
+Database changed
+
+ 5. Delete all records from STUDENT table. 
+mysql> DELETE FROM STUDENT;
+Query OK, 3 rows affected (0.00 sec)
+
+mysql> SELECT * FROM STUDENT;
+Empty set (0.00 sec)
+
+ 6. Delete Invoice details of a particular customer "XYZ".
+mysql> USE INVOICE;
+Reading table information for completion of table and column names
+You can turn off this feature to get a quicker startup with -A
+
+Database changed
+mysql> DELETE FROM Invoice_item WHERE inv_id=103;
+Query OK, 1 row affected (0.00 sec)
+
+mysql> DELETE FROM Invoice_master WHERE inv_id=103;
+Query OK, 1 row affected (0.01 sec)
+
+mysql> 
+mysql> SELECT * FROM Invoice_master;
++--------+---------+------------+
+| inv_id | cust_id | inv_date   |
++--------+---------+------------+
+|    102 |   10002 | 2026-01-21 |
++--------+---------+------------+
+1 row in set (0.00 sec)
+
+mysql> SELECT * FROM Invoice_item;
++--------+------+----------+
+| inv_id | pid  | quantity |
++--------+------+----------+
+|    102 |    3 |        2 |
++--------+------+----------+
+1 row in set (0.00 sec)
+
+
+ 7. Delete the first two records of INVOICE_ITEM table its purchase quantity is high.
+mysql> DELETE FROM Invoice_item
+    -> ORDER BY quantity DESC
+    -> LIMIT 2;
+Query OK, 1 row affected (0.01 sec)
+
+mysql> SELECT * FROM Invoice_item;
+Empty set (0.00 sec)
+
+mysql> 
+
+
+
