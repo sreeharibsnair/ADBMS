@@ -1,0 +1,249 @@
+mysql> CREATE TABLE student (
+    ->     id INT PRIMARY KEY,
+    ->     name VARCHAR(50),
+    ->     city VARCHAR(50)
+    -> );
+Query OK, 0 rows affected (0.02 sec)
+
+mysql> 
+mysql> DROP TABLE IF EXISTS product;
+Query OK, 0 rows affected, 1 warning (0.01 sec)
+
+mysql> CREATE TABLE product (
+    ->     pid INT PRIMARY KEY,
+    ->     pname VARCHAR(50),
+    ->     price INT
+    -> );
+Query OK, 0 rows affected (0.02 sec)
+
+mysql> 
+mysql> SET AUTOCOMMIT = 0;
+Query OK, 0 rows affected (0.00 sec)
+
+mysql> 
+mysql> INSERT INTO student VALUES (101, 'Anu', 'Kochi');
+Query OK, 1 row affected (0.00 sec)
+
+mysql> SELECT * FROM student;
++-----+------+-------+
+| id  | name | city  |
++-----+------+-------+
+| 101 | Anu  | Kochi |
++-----+------+-------+
+1 row in set (0.00 sec)
+
+mysql> COMMIT;
+Query OK, 0 rows affected (0.00 sec)
+
+mysql> 
+mysql> DELETE FROM student WHERE id = 101;
+Query OK, 1 row affected (0.00 sec)
+
+mysql> SELECT * FROM student;
+Empty set (0.00 sec)
+
+mysql> ROLLBACK;
+Query OK, 0 rows affected (0.00 sec)
+
+mysql> SELECT * FROM student;
++-----+------+-------+
+| id  | name | city  |
++-----+------+-------+
+| 101 | Anu  | Kochi |
++-----+------+-------+
+1 row in set (0.00 sec)
+
+mysql> 
+mysql> INSERT INTO product VALUES (301,'Pen',10);
+Query OK, 1 row affected (0.00 sec)
+
+mysql> INSERT INTO product VALUES (302,'Pencil',5);
+Query OK, 1 row affected (0.00 sec)
+
+mysql> SELECT * FROM product;
++-----+--------+-------+
+| pid | pname  | price |
++-----+--------+-------+
+| 301 | Pen    |    10 |
+| 302 | Pencil |     5 |
++-----+--------+-------+
+2 rows in set (0.00 sec)
+
+mysql> 
+mysql> SAVEPOINT sp1;
+Query OK, 0 rows affected (0.00 sec)
+
+mysql> 
+mysql> UPDATE product SET price = 15 WHERE pid = 301;
+Query OK, 1 row affected (0.00 sec)
+Rows matched: 1  Changed: 1  Warnings: 0
+
+mysql> SELECT * FROM product;
++-----+--------+-------+
+| pid | pname  | price |
++-----+--------+-------+
+| 301 | Pen    |    15 |
+| 302 | Pencil |     5 |
++-----+--------+-------+
+2 rows in set (0.00 sec)
+
+mysql> 
+mysql> SAVEPOINT sp2;
+Query OK, 0 rows affected (0.00 sec)
+
+mysql> 
+mysql> INSERT INTO product VALUES (303,'Notebook',40);
+Query OK, 1 row affected (0.00 sec)
+
+mysql> SELECT * FROM product;
++-----+----------+-------+
+| pid | pname    | price |
++-----+----------+-------+
+| 301 | Pen      |    15 |
+| 302 | Pencil   |     5 |
+| 303 | Notebook |    40 |
++-----+----------+-------+
+3 rows in set (0.00 sec)
+
+mysql> 
+mysql> SAVEPOINT sp3;
+Query OK, 0 rows affected (0.00 sec)
+
+mysql> 
+mysql> DELETE FROM product WHERE pid = 302;
+Query OK, 1 row affected (0.00 sec)
+
+mysql> SELECT * FROM product;
++-----+----------+-------+
+| pid | pname    | price |
++-----+----------+-------+
+| 301 | Pen      |    15 |
+| 303 | Notebook |    40 |
++-----+----------+-------+
+2 rows in set (0.00 sec)
+
+mysql> 
+mysql> ROLLBACK TO sp3;
+Query OK, 0 rows affected (0.00 sec)
+
+mysql> SELECT * FROM product;
++-----+----------+-------+
+| pid | pname    | price |
++-----+----------+-------+
+| 301 | Pen      |    15 |
+| 302 | Pencil   |     5 |
+| 303 | Notebook |    40 |
++-----+----------+-------+
+3 rows in set (0.00 sec)
+
+mysql> 
+mysql> ROLLBACK TO sp1;
+Query OK, 0 rows affected (0.00 sec)
+
+mysql> SELECT * FROM product;
++-----+--------+-------+
+| pid | pname  | price |
++-----+--------+-------+
+| 301 | Pen    |    10 |
+| 302 | Pencil |     5 |
++-----+--------+-------+
+2 rows in set (0.00 sec)
+
+mysql> 
+mysql> COMMIT;
+Query OK, 0 rows affected (0.01 sec)
+
+mysql> 
+mysql> DROP USER IF EXISTS 'user1'@'localhost';
+Query OK, 0 rows affected (0.00 sec)
+
+mysql> CREATE USER 'user1'@'localhost' IDENTIFIED BY 'Pass@1234';
+Query OK, 0 rows affected (0.01 sec)
+
+mysql> 
+mysql> GRANT SELECT ON college.student TO 'user1'@'localhost';
+Query OK, 0 rows affected (0.00 sec)
+
+mysql> SHOW GRANTS FOR 'user1'@'localhost';
++------------------------------------------------------------+
+| Grants for user1@localhost                                 |
++------------------------------------------------------------+
+| GRANT USAGE ON *.* TO `user1`@`localhost`                  |
+| GRANT SELECT ON `college`.`student` TO `user1`@`localhost` |
++------------------------------------------------------------+
+2 rows in set (0.00 sec)
+
+mysql> 
+mysql> GRANT SELECT, INSERT, UPDATE ON college.student TO 'user1'@'localhost';
+Query OK, 0 rows affected (0.01 sec)
+
+mysql> SHOW GRANTS FOR 'user1'@'localhost';
++----------------------------------------------------------------------------+
+| Grants for user1@localhost                                                 |
++----------------------------------------------------------------------------+
+| GRANT USAGE ON *.* TO `user1`@`localhost`                                  |
+| GRANT SELECT, INSERT, UPDATE ON `college`.`student` TO `user1`@`localhost` |
++----------------------------------------------------------------------------+
+2 rows in set (0.00 sec)
+
+mysql> 
+mysql> GRANT ALL PRIVILEGES ON college.* TO 'user1'@'localhost';
+Query OK, 0 rows affected (0.00 sec)
+
+mysql> SHOW GRANTS FOR 'user1'@'localhost';
++----------------------------------------------------------------------------+
+| Grants for user1@localhost                                                 |
++----------------------------------------------------------------------------+
+| GRANT USAGE ON *.* TO `user1`@`localhost`                                  |
+| GRANT ALL PRIVILEGES ON `college`.* TO `user1`@`localhost`                 |
+| GRANT SELECT, INSERT, UPDATE ON `college`.`student` TO `user1`@`localhost` |
++----------------------------------------------------------------------------+
+3 rows in set (0.00 sec)
+
+mysql> 
+mysql> REVOKE SELECT ON college.student FROM 'user1'@'localhost';
+Query OK, 0 rows affected (0.01 sec)
+
+mysql> SHOW GRANTS FOR 'user1'@'localhost';
++--------------------------------------------------------------------+
+| Grants for user1@localhost                                         |
++--------------------------------------------------------------------+
+| GRANT USAGE ON *.* TO `user1`@`localhost`                          |
+| GRANT ALL PRIVILEGES ON `college`.* TO `user1`@`localhost`         |
+| GRANT INSERT, UPDATE ON `college`.`student` TO `user1`@`localhost` |
++--------------------------------------------------------------------+
+3 rows in set (0.00 sec)
+
+mysql> 
+mysql> REVOKE INSERT, UPDATE ON college.student FROM 'user1'@'localhost';
+Query OK, 0 rows affected (0.00 sec)
+
+mysql> SHOW GRANTS FOR 'user1'@'localhost';
++------------------------------------------------------------+
+| Grants for user1@localhost                                 |
++------------------------------------------------------------+
+| GRANT USAGE ON *.* TO `user1`@`localhost`                  |
+| GRANT ALL PRIVILEGES ON `college`.* TO `user1`@`localhost` |
++------------------------------------------------------------+
+2 rows in set (0.00 sec)
+
+mysql> 
+mysql> REVOKE ALL PRIVILEGES ON college.* FROM 'user1'@'localhost';
+Query OK, 0 rows affected (0.01 sec)
+
+mysql> SHOW GRANTS FOR 'user1'@'localhost';
++-------------------------------------------+
+| Grants for user1@localhost                |
++-------------------------------------------+
+| GRANT USAGE ON *.* TO `user1`@`localhost` |
++-------------------------------------------+
+1 row in set (0.00 sec)
+
+mysql> 
+mysql> FLUSH PRIVILEGES;
+Query OK, 0 rows affected (0.01 sec)
+
+mysql> ^C
+mysql> 
+
+
