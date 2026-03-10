@@ -1,0 +1,75 @@
+mysql> mysql> USE invoice;
+
+mysql> SELECT * FROM customer;
++-----+-------+----------+
+| cid | cname | city     |
++-----+-------+----------+
+|   1 | Anu   | TVM      |
+|   2 | Ravi  | TVM      |
+|   3 | Meera | Kochi    |
+|   4 | Arun  | Calicut  |
+|   5 | Sita  | Thrissur |
+|   6 | Rahul | Kochi    |
+|   7 | Neha  | Kollam   |
++-----+-------+----------+
+7 rows in set (0.00 sec)
+
+mysql> SELECT * FROM customer;
++-----+-------+----------+
+| cid | cname | city     |
++-----+-------+----------+
+|   1 | Anu   | TVM      |
+|   2 | Ravi  | TVM      |
+|   3 | Meera | Kochi    |
+|   4 | Arun  | Calicut  |
+|   5 | Sita  | Thrissur |
+|   6 | Rahul | Kochi    |
+|   7 | Neha  | Kollam   |
++-----+-------+----------+
+7 rows in set (0.00 sec)
+
+
+mysql> SELECT * FROM customer WHERE city <> 'TVM';
++-----+-------+----------+
+| cid | cname | city     |
++-----+-------+----------+
+|   3 | Meera | Kochi    |
+|   4 | Arun  | Calicut  |
+|   5 | Sita  | Thrissur |
+|   6 | Rahul | Kochi    |
+|   7 | Neha  | Kollam   |
++-----+-------+----------+
+5 rows in set (0.00 sec)
+
+
+mysql> SELECT * FROM customer ORDER BY city ASC, cname DESC;
++-----+-------+----------+
+| cid | cname | city     |
++-----+-------+----------+
+|   4 | Arun  | Calicut  |
+|   6 | Rahul | Kochi    |
+|   3 | Meera | Kochi    |
+|   7 | Neha  | Kollam   |
+|   5 | Sita  | Thrissur |
+|   2 | Ravi  | TVM      |
+|   1 | Anu   | TVM      |
++-----+-------+----------+
+7 rows in set (0.00 sec)
+
+mysql> SELECT cname FROM customer WHERE (cname LIKE '%e%' OR cname LIKE '%a%') AND LENGTH(cname) >= 3;
++-------+
+| cname |
++-------+
+| Anu   |
+| Ravi  |
+| Meera |
+| Arun  |
+| Sita  |
+| Rahul |
+| Neha  |
++-------+
+7 rows in set (0.00 sec)
+
+mysql> 
+
+
