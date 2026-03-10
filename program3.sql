@@ -105,7 +105,7 @@ Query OK, 0 rows affected (0.00 sec)
 
 mysql> ROLLBACK TO sp1;
 Query OK, 0 rows affected (0.00 sec)
-
+//////////////////////////////////////////////
 mysql> 
 mysql> COMMIT;   
 Query OK, 0 rows affected (0.00 sec)
