@@ -1,0 +1,67 @@
+mysql> USE INVOICE;
+Reading table information for completion of table and column names
+You can turn off this feature to get a quicker startup with -A
+
+Database changed
+mysql> SELECT pname 
+    -> FROM Product 
+    -> WHERE pid IN (
+    ->     SELECT pid 
+    ->     FROM Invoice_item 
+    ->     WHERE quantity > 3
+    -> );
++----------+
+| pname    |
++----------+
+| Keyboard |
++----------+
+1 row in set (0.01 sec)
+
+mysql> SELECT pname 
+    -> FROM Product 
+    -> WHERE pid NOT IN (
+    ->     SELECT pid 
+    ->     FROM Invoice_item
+    -> );
++--------+
+| pname  |
++--------+
+| Pen    |
+| Mouse  |
+| Laptop |
+| Pencil |
+| Bag    |
++--------+
+5 rows in set (0.00 sec)
+
+mysql> SELECT DISTINCT name 
+    -> FROM Customer 
+    -> WHERE id IN (
+    ->     SELECT m.cust_id 
+    ->     FROM Invoice_master m
+    ->     JOIN Invoice_item i ON m.inv_id = i.inv_id
+    ->     GROUP BY m.cust_id 
+    ->     HAVING COUNT(i.pid) >= 2
+    -> );
++-------+
+| name  |
++-------+
+| Meera |
++-------+
+1 row in set (0.01 sec)
+
+mysql> SELECT * FROM Customer;
++----+-------+---------------+----------+------------+
+| id | name  | address       | city     | ph_no      |
++----+-------+---------------+----------+------------+
+|  1 | Anu   | Rose Villa    | TVM      | 9876543210 |
+|  3 | Meera | New Blue Nest | TVM      | 9999999999 |
+|  5 | Sita  | Hill Top      | Thrissur | 9123456789 |
+|  6 | Rahul | City Tower    | Kochi    | 9876501234 |
+|  7 | Neha  | Ocean View    | Kollam   | 9000012345 |
++----+-------+---------------+----------+------------+
+5 rows in set (0.00 sec)
+
+mysql> 
+
+
